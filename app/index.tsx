@@ -40,46 +40,56 @@ export default function Page() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Listify</Text>
-        <ActivityIndicator animating={isLoading} size="large" />
-
-        {!isLoading && recipes.length === 0 && <Text>No recipes found</Text>}
-
-        {recipes.map((recipe: Recipe) => (
-          <Link href={`/recipe/${recipe.Recipe_id}`} key={recipe.Recipe_id}>
-            <View style={styles.recipeContainer}>
-              {recipe.Photos.length > 0 && (
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Listify</Text>
+      {isLoading ? (
+        <ActivityIndicator size="large" style={styles.loadingIndicator} />
+      ) : (
+        <View style={styles.recipesContainer}>
+          {recipes.length === 0 && (
+            <Text style={styles.noRecipesText}>No recipes found</Text>
+          )}
+          {recipes.map((recipe: Recipe) => (
+            <Link href={`/recipe/${recipe.Recipe_id}`} key={recipe.Recipe_id}>
+              <View style={styles.recipeItem}>
                 <Image
                   source={{ uri: recipe.Photos[0] }}
                   style={styles.recipeImage}
                 />
-              )}
-              <Text style={styles.recipeName}>{recipe.Name}</Text>
-            </View>
-          </Link>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+                <Text style={styles.recipeName}>{recipe.Name}</Text>
+              </View>
+            </Link>
+          ))}
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
-  },
-  safeArea: {
     flex: 1,
+    backgroundColor: "#fff",
+    padding: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
   },
-  recipeContainer: {
+  loadingIndicator: {
+    marginVertical: 20,
+  },
+  recipesContainer: {
+    marginBottom: 20,
+  },
+  recipeItem: {
     marginBottom: 20,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 16,
+    borderRadius: 10,
   },
   recipeImage: {
     width: 200,
@@ -89,5 +99,10 @@ const styles = StyleSheet.create({
   recipeName: {
     fontSize: 18,
     marginTop: 10,
+    fontWeight: "bold",
+  },
+  noRecipesText: {
+    fontSize: 16,
+    color: "gray",
   },
 });
