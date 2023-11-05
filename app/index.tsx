@@ -9,11 +9,36 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
+import Checkbox from "expo-checkbox";
 import { Link } from "expo-router";
 import { Recipe } from "../types/recipe";
 export default function Page() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedRecipes, setSelectedRecipes] = useState<
+    { isChecked: boolean; recipeId: number }[]
+  >([]);
+
+  useEffect(() => {
+    const selectedRecipes = recipes.map((recipe) => ({
+      isChecked: false,
+      recipeId: recipe.Recipe_id,
+    }));
+    setSelectedRecipes(selectedRecipes);
+  }, [recipes]);
+
+  const toggleRecipe = (recipeId: number) => {
+    const newSelectedRecipes = selectedRecipes.map((recipe) => {
+      if (recipe.recipeId === recipeId) {
+        return {
+          ...recipe,
+          isChecked: !recipe.isChecked,
+        };
+      }
+      return recipe;
+    });
+    setSelectedRecipes(newSelectedRecipes);
+  };
 
   const getRecipes = async () => {
     try {
@@ -49,17 +74,32 @@ export default function Page() {
           {recipes.length === 0 && (
             <Text style={styles.noRecipesText}>No recipes found</Text>
           )}
-          {recipes.map((recipe: Recipe) => (
-            <Link href={`/recipe/${recipe.Recipe_id}`} key={recipe.Recipe_id}>
-              <View style={styles.recipeItem}>
-                <Image
-                  source={{ uri: recipe.Photos[0] }}
-                  style={styles.recipeImage}
-                />
-                <Text style={styles.recipeName}>{recipe.Name}</Text>
+          {recipes.map((recipe: Recipe) => {
+            const isChecked = selectedRecipes.find(
+              (selectedRecipe) => selectedRecipe.recipeId === recipe.Recipe_id
+            )?.isChecked;
+            return (
+              <View>
+                <Link
+                  href={`/recipe/${recipe.Recipe_id}`}
+                  key={recipe.Recipe_id}
+                >
+                  <View style={styles.recipeItem}>
+                    <Image
+                      source={{ uri: recipe.Photos[0] }}
+                      style={styles.recipeImage}
+                    />
+                    <Text style={styles.recipeName}>{recipe.Name}</Text>
+                    <Checkbox
+                      value={isChecked}
+                      onValueChange={() => toggleRecipe(recipe.Recipe_id)}
+                      color={isChecked ? "#4630EB" : undefined}
+                    />
+                  </View>
+                </Link>
               </View>
-            </Link>
-          ))}
+            );
+          })}
         </View>
       )}
     </ScrollView>
