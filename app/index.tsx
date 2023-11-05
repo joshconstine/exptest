@@ -33,7 +33,7 @@ type Ingredient = {
   Quantity_type_id: number;
 };
 
-export default function App() {
+export default function Page() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,8 +70,8 @@ export default function App() {
         {!isLoading && recipes.length === 0 && <Text>No recipes found</Text>}
 
         {recipes.map((recipe: Recipe) => (
-          <Link href={`/recipe/${recipe.Recipe_id}`}>
-            <View key={recipe.Recipe_id} style={styles.recipeContainer}>
+          <Link href={`/recipe/${recipe.Recipe_id}`} key={recipe.Recipe_id}>
+            <View style={styles.recipeContainer}>
               {recipe.Photos.length > 0 && (
                 <Image
                   source={{ uri: recipe.Photos[0] }}
