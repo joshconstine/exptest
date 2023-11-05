@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
+import { Link } from "expo-router";
 type Recipe = {
   Recipe_id: number;
   Name: string;
@@ -69,15 +70,17 @@ export default function App() {
         {!isLoading && recipes.length === 0 && <Text>No recipes found</Text>}
 
         {recipes.map((recipe: Recipe) => (
-          <View key={recipe.Recipe_id} style={styles.recipeContainer}>
-            {recipe.Photos.length > 0 && (
-              <Image
-                source={{ uri: recipe.Photos[0] }}
-                style={styles.recipeImage}
-              />
-            )}
-            <Text style={styles.recipeName}>{recipe.Name}</Text>
-          </View>
+          <Link href={`/recipe/${recipe.Recipe_id}`}>
+            <View key={recipe.Recipe_id} style={styles.recipeContainer}>
+              {recipe.Photos.length > 0 && (
+                <Image
+                  source={{ uri: recipe.Photos[0] }}
+                  style={styles.recipeImage}
+                />
+              )}
+              <Text style={styles.recipeName}>{recipe.Name}</Text>
+            </View>
+          </Link>
         ))}
       </ScrollView>
     </SafeAreaView>
