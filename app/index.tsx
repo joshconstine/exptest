@@ -10,29 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Image } from "react-native";
 import { Link } from "expo-router";
-type Recipe = {
-  Recipe_id: number;
-  Name: string;
-  Description: string;
-  Photos: string[];
-  Tags: Tag[];
-  TagString: string;
-  Ingredients: Ingredient[];
-};
-
-type Tag = {
-  Tag_id: number;
-  Name: string;
-};
-
-type Ingredient = {
-  Ingredient_id: number;
-  Name: string;
-  Quantity: number;
-  Quantity_type: string;
-  Quantity_type_id: number;
-};
-
+import { Recipe } from "../types/recipe";
 export default function Page() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
