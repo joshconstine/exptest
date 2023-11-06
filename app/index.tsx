@@ -12,6 +12,7 @@ import { Image } from "react-native";
 import Checkbox from "expo-checkbox";
 import { Link } from "expo-router";
 import { Recipe } from "../types/recipe";
+
 export default function Page() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -65,44 +66,51 @@ export default function Page() {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Listify</Text>
-      {isLoading ? (
-        <ActivityIndicator size="large" style={styles.loadingIndicator} />
-      ) : (
-        <View style={styles.recipesContainer}>
-          {recipes.length === 0 && (
-            <Text style={styles.noRecipesText}>No recipes found</Text>
-          )}
-          {recipes.map((recipe: Recipe) => {
-            const isChecked = selectedRecipes.find(
-              (selectedRecipe) => selectedRecipe.recipeId === recipe.Recipe_id
-            )?.isChecked;
-            return (
-              <View>
-                <Link
-                  href={`/recipe/${recipe.Recipe_id}`}
-                  key={recipe.Recipe_id}
-                >
-                  <View style={styles.recipeItem}>
-                    <Image
-                      source={{ uri: recipe.Photos[0] }}
-                      style={styles.recipeImage}
-                    />
-                    <Text style={styles.recipeName}>{recipe.Name}</Text>
-                    <Checkbox
-                      value={isChecked}
-                      onValueChange={() => toggleRecipe(recipe.Recipe_id)}
-                      color={isChecked ? "#4630EB" : undefined}
-                    />
-                  </View>
-                </Link>
-              </View>
-            );
-          })}
-        </View>
-      )}
-    </ScrollView>
+    <View style={styles.page}>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Listify</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" style={styles.loadingIndicator} />
+        ) : (
+          <View style={styles.recipesContainer}>
+            {recipes.length === 0 && (
+              <Text style={styles.noRecipesText}>No recipes found</Text>
+            )}
+            {recipes.map((recipe: Recipe) => {
+              const isChecked = selectedRecipes.find(
+                (selectedRecipe) => selectedRecipe.recipeId === recipe.Recipe_id
+              )?.isChecked;
+              return (
+                <View>
+                  <Link
+                    href={`/recipe/${recipe.Recipe_id}`}
+                    key={recipe.Recipe_id}
+                  >
+                    <View style={styles.recipeItem}>
+                      <Image
+                        source={{ uri: recipe.Photos[0] }}
+                        style={styles.recipeImage}
+                      />
+                      <Text style={styles.recipeName}>{recipe.Name}</Text>
+                      <Checkbox
+                        value={isChecked}
+                        onValueChange={() => toggleRecipe(recipe.Recipe_id)}
+                        color={isChecked ? "#4630EB" : undefined}
+                      />
+                    </View>
+                  </Link>
+                </View>
+              );
+            })}
+          </View>
+        )}
+      </ScrollView>
+      <View style={styles.footer}>
+        <Link href="/list">
+          <Text style={styles.footerText}>List</Text>
+        </Link>
+      </View>
+    </View>
   );
 }
 
@@ -144,5 +152,18 @@ const styles = StyleSheet.create({
   noRecipesText: {
     fontSize: 16,
     color: "gray",
+  },
+  footer: {
+    backgroundColor: "#4630EB",
+    padding: 16,
+  },
+  footerText: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  page: {
+    flex: 1,
   },
 });
